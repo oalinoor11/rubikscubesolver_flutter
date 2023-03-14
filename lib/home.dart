@@ -71,25 +71,34 @@ class _HomePageState extends State<HomePage> {
             return ButtonTheme(
               minWidth: MediaQuery.of(context).size.width,
               height: 50,
-              child: RaisedButton(
-                onPressed: model.sideColorCode.containsValue("")
+              child: InkWell(
+                onTap: model.sideColorCode.containsValue("")
                     ? null
                     : () {
-                        setState(() {
-                          loading = true;
-                        });
-                        solveCube(_context);
-                      },
-                color: Colors.indigo[800],
-                textColor: Colors.white,
-                child: loading
-                    ? Container(
-                        height: 40,
-                        child: SpinKitThreeBounce(
-                          size: 18,
-                          color: Colors.white,
-                        ))
-                    : Text("Solve", style: TextStyle(fontSize: 14)),
+                  setState(() {
+                    loading = true;
+                  });
+                  solveCube(_context);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Colors.indigo[800],
+                    ),
+                    child: loading
+                        ? Container(
+                            child: SpinKitThreeBounce(
+                              size: 18,
+                              color: Colors.white,
+                            ))
+                        : Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("Solve", style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold)),
+                        ),
+                  ),
+                ),
               ),
             );
           }));
@@ -160,14 +169,16 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
-                                  FlatButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text(
-                                        "Try Again",
-                                        style: TextStyle(color: Colors.blue),
-                                      ))
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                        child: Text(
+                                          "Try Again",
+                                          style: TextStyle(color: Colors.blue),
+                                        )),
+                                  )
                                 ],
                               )
                             : Column(
@@ -190,28 +201,30 @@ class _HomePageState extends State<HomePage> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      FlatButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text(
-                                            "Try Again",
-                                            style:
-                                                TextStyle(color: Colors.blue),
-                                          )),
-                                      FlatButton(
-                                          onPressed: () {
-                                            model.setsideColor(
-                                                side, model.tempRGB);
-                                            model.setsideColorCode(
-                                                side, model.tempColorCode);
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text(
-                                            "Done",
-                                            style:
-                                                TextStyle(color: Colors.green),
-                                          ))
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Container(
+                                            child: Text(
+                                              "Try Again",
+                                              style: TextStyle(color: Colors.blue),
+                                            )),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          model.setsideColor(
+                                              side, model.tempRGB);
+                                          model.setsideColorCode(
+                                              side, model.tempColorCode);
+                                          Navigator.pop(context);
+                                        },
+                                        child: Container(
+                                            child: Text(
+                                              "Done",
+                                              style: TextStyle(color: Colors.blue),
+                                            )),
+                                      )
                                     ],
                                   )
                                 ],
@@ -237,7 +250,7 @@ class _HomePageState extends State<HomePage> {
         loading = false;
       });
       if (response.data["status"] == false) {
-        Scaffold.of(_context).showSnackBar(new SnackBar(
+        ScaffoldMessenger.of(_context).showSnackBar(new SnackBar(
           content: new Text('Wrong color pattern, Try again...'),
         ));
       } else {
@@ -249,7 +262,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         loading = false;
       });
-      Scaffold.of(_context).showSnackBar(new SnackBar(
+      ScaffoldMessenger.of(_context).showSnackBar(new SnackBar(
         content: new Text('Server error, Try again...'),
       ));
     }
